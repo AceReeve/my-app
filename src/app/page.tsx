@@ -1,103 +1,298 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 
-export default function Home() {
+type RoofOptions = {
+  color: string;
+  style: string;
+  material: string;
+  windowCount: number;
+  height: number;
+  length: number;
+};
+
+const roofImages: Record<string, string> = {
+  // Red tile variations
+  "red-gable-tile-4": "/red.png",
+  "red-hip-tile-4": "/hip red.png",
+
+  // Blue tile variations
+  "blue-gable-tile-1-1-1": "/gable1.png",
+  "blue-gable-tile-1-1-2": "/long2.png",
+  "blue-gable-tile-1-1-3": "/gable1_length3.png",
+  "blue-gable-tile-1-2-1": "/height 2.png",
+  "blue-gable-tile-1-2-2": "/gable1_height2_length2.png",
+  "blue-gable-tile-1-2-3": "/gable1_height2_length3.png",
+  "blue-gable-tile-1-3-1": "/gable1_height3.png",
+  "blue-gable-tile-1-3-2": "/gable1_height3_length2.png",
+  "blue-gable-tile-1-3-3": "/gable1_height3_length3.png",
+  "blue-gable-tile-2": "/blue.png",
+  "blue-gable-tile-3": "/gable3.png",
+  "blue-hip-tile-1": "/2tile.png",
+  "blue-hip-tile-2": "/tile2.png",
+  "blue-hip-tile-3": "/8tile.png",
+
+  // Gray tile variations
+  "gray-gable-tile-4": "/gray.png",
+  "gray-hip-tile-4": "/hip gray.png",
+};
+
+export default function RoofCustomizer() {
+  const [options, setOptions] = useState<RoofOptions>({
+    color: "blue",
+    style: "gable",
+    material: "tile",
+    windowCount: 1,
+    height: 1,
+    length: 1,
+  });
+
+  const getCurrentImageKey = (): string => {
+    if (
+      options.color === "blue" &&
+      options.style === "gable" &&
+      options.material === "tile" &&
+      options.windowCount === 1
+    ) {
+      return `blue-gable-tile-1-${options.height}-${options.length}`;
+    }
+    return `${options.color}-${options.style}-${options.material}-${options.windowCount}`;
+  };
+
+  const currentImage =
+    roofImages[getCurrentImageKey()] || roofImages["red-gable-tile-medium-2"];
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-bold text-gray-900">Roof Customizer</h1>
+          <p className="mt-2 text-lg text-gray-600">
+            Customize your roof design and see the changes in real-time
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <div className="grid gap-8 lg:grid-cols-2">
+          {/* Image Preview */}
+          <div className="flex items-center justify-center">
+            <Card className="w-full">
+              <CardHeader>
+                <CardTitle>Roof Preview</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="aspect-[3/2] w-full overflow-hidden rounded-lg bg-gray-100">
+                  <Image
+                    src={currentImage || "/placeholder.svg"}
+                    alt="Roof preview"
+                    width={600}
+                    height={400}
+                    className="h-full w-full object-cover transition-all duration-300"
+                  />
+                </div>
+                <div className="mt-4 text-sm text-gray-600">
+                  <p>
+                    <strong>Current Configuration:</strong>
+                  </p>
+                  <p>
+                    Color:{" "}
+                    {options.color.charAt(0).toUpperCase() +
+                      options.color.slice(1)}
+                  </p>
+                  <p>
+                    Style:{" "}
+                    {options.style.charAt(0).toUpperCase() +
+                      options.style.slice(1)}
+                  </p>
+                  <p>
+                    Material:{" "}
+                    {options.material.charAt(0).toUpperCase() +
+                      options.material.slice(1)}
+                  </p>
+
+                  <p>Windows: {options.windowCount}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Controls */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Roof Options</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Roof Color */}
+                <div className="space-y-2">
+                  <Label htmlFor="color">Roof Color</Label>
+                  <Select
+                    value={options.color}
+                    onValueChange={(value) =>
+                      setOptions((prev) => ({ ...prev, color: value }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select roof color" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="blue">Blue</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Roof Style */}
+                <div className="space-y-2">
+                  <Label htmlFor="style">Roof Style</Label>
+                  <Select
+                    value={options.style}
+                    onValueChange={(value) =>
+                      setOptions((prev) => ({ ...prev, style: value }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select roof style" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="gable">Gable</SelectItem>
+                      <SelectItem value="hip">Hip</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Roof Material */}
+                <div className="space-y-2">
+                  <Label htmlFor="material">Roof Material</Label>
+                  <Select
+                    value={options.material}
+                    onValueChange={(value) =>
+                      setOptions((prev) => ({ ...prev, material: value }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select roof material" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="tile">Tile</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Window Count */}
+                <div className="space-y-2">
+                  <Label htmlFor="windows">Window: {options.windowCount}</Label>
+                  <Slider
+                    id="windowCount"
+                    value={[options.windowCount]}
+                    onValueChange={(value) =>
+                      setOptions((prev) => ({ ...prev, windowCount: value[0] }))
+                    }
+                    max={3}
+                    min={1}
+                    step={1}
+                    className="w-full"
+                  />
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>1</span>
+                    <span>2</span>
+                    <span>3</span>
+                  </div>
+                </div>
+
+                {/* Height */}
+                {options.color === "blue" &&
+                  options.style === "gable" &&
+                  options.material === "tile" &&
+                  options.windowCount === 1 && (
+                    <div className="space-y-2">
+                      <Label htmlFor="height">Height: {options.height}</Label>
+                      <Slider
+                        id="height"
+                        value={[options.height]}
+                        onValueChange={(value) =>
+                          setOptions((prev) => ({ ...prev, height: value[0] }))
+                        }
+                        max={3}
+                        min={1}
+                        step={1}
+                        className="w-full"
+                      />
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>1</span>
+                        <span>2</span>
+                        <span>3</span>
+                      </div>
+                    </div>
+                  )}
+
+                {/* Length */}
+                {options.color === "blue" &&
+                  options.style === "gable" &&
+                  options.material === "tile" &&
+                  options.windowCount === 1 && (
+                    <div className="space-y-2">
+                      <Label htmlFor="length">Length: {options.length}</Label>
+                      <Slider
+                        id="length"
+                        value={[options.length]}
+                        onValueChange={(value) =>
+                          setOptions((prev) => ({ ...prev, length: value[0] }))
+                        }
+                        max={3}
+                        min={1}
+                        step={1}
+                        className="w-full"
+                      />
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>1</span>
+                        <span>2</span>
+                        <span>3</span>
+                      </div>
+                    </div>
+                  )}
+              </CardContent>
+            </Card>
+
+            {/* Summary Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Configuration Summary</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="font-medium">Roof Color:</span>
+                    <span className="capitalize">{options.color}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium">Roof Style:</span>
+                    <span className="capitalize">{options.style}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium">Material:</span>
+                    <span className="capitalize">{options.material}</span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="font-medium">Windows:</span>
+                    <span>{options.windowCount}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
